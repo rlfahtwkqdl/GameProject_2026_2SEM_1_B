@@ -1,5 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR.Haptics;
+
+public enum PlayerState
+{
+    normal,
+
+    PickUp
+}
 
 public class PlayerController : MonoBehaviour
 {
@@ -21,16 +29,29 @@ public class PlayerController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
     }
-
+    private PlayerState currentState = PlayerState.normal;
     void Update()
     {
         Keyboard keyboard = Keyboard.current;
 
-        if(keyboard == null)
+        if (keyboard == null)
         {
             return;
         }
 
+        ApplyGravity();
+
+
+        if (currentState != PlayerState.normal) return;
+
+        HandleMovement(keyboard);
+    }
+
+        
+    
+
+    private void HandleMovement(Keyboard keyboard)
+    {
         Vector2 input = Vector2.zero;
 
         if (keyboard.aKey.isPressed)
@@ -73,6 +94,9 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
 
+    }
+    private void ApplyGravity()
+    {
         //7. 기본 중력 설정
         if (controller.isGrounded && verticalVelocity < 0f)
         {
@@ -84,14 +108,13 @@ public class PlayerController : MonoBehaviour
         }
 
         controller.Move(Vector3.up * verticalVelocity * Time.deltaTime);
-
-        float animationSpeed = 0f;
-
-        if (moveDirection.sqrMagnitude > 0.001f)
-        {
-            animationSpeed = isRunning ? 1f : 0.5f;
-        }
-
-        animator.SetFloat("speed", animationSpeed, 0.1f, Time.deltaTime);
     }
+
+    // PlayerController.cs 내부에 아래 메서드를 추가합니다.
+    public void ChangeState(PlayerState newState)
+    {
+        currentState = newState;
+    }
+
+
 }
