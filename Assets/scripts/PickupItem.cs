@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public class PickupItem : MonoBehaviour
 {
     [Header("아이템 정보")]
@@ -33,5 +34,10 @@ public class PickupItem : MonoBehaviour
     {
         Debug.Log(itemName + " " + amount + "개 획득");
         Destroy(gameObject);
+    }
+
+    public string GetItemName()
+    {
+        return itemName;
     }
 }
