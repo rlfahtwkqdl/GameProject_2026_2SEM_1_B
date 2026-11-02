@@ -6,7 +6,8 @@ public enum PlayerState
 {
     normal,
 
-    PickUp
+    PickUp,
+    Inventory
 }
 
 public class PlayerController : MonoBehaviour
@@ -47,8 +48,8 @@ public class PlayerController : MonoBehaviour
         HandleMovement(keyboard);
     }
 
-        
-    
+
+
 
     private void HandleMovement(Keyboard keyboard)
     {
@@ -110,11 +111,26 @@ public class PlayerController : MonoBehaviour
         controller.Move(Vector3.up * verticalVelocity * Time.deltaTime);
     }
 
+
+
     // PlayerController.cs 내부에 아래 메서드를 추가합니다.
     public void ChangeState(PlayerState newState)
     {
         currentState = newState;
+
+        if(currentState != PlayerState.normal)
+        {
+            animator.SetFloat("speed", 0);
+        }
+
+        Debug.Log("현재 상태 : " + currentState);
     }
 
+    
 
+    public bool IsNormalState()
+    {
+        return currentState == PlayerState.normal;
+
+    }
 }
