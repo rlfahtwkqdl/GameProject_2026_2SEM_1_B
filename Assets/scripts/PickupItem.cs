@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEditor.Progress;
 
 
 public class PickupItem : MonoBehaviour
@@ -7,6 +8,9 @@ public class PickupItem : MonoBehaviour
     [SerializeField] private string itemName = "아이템";
     [SerializeField] private int amount = 1;
     [SerializeField] private QuestManager questManager;
+
+    [TextArea]
+    [SerializeField] public string description = "아이템 설명이 없습니다.";
 
     [Header("화면 연출")]
     [SerializeField] private float rotationSpeed = 60f;
@@ -47,7 +51,7 @@ public class PickupItem : MonoBehaviour
             return;
         }
 
-        if (inventory.AddItem(itemName, amount) == false)
+        if (inventory.AddItem(itemName, amount, description) == false)
         {
             return;
         }
@@ -66,4 +70,8 @@ public class PickupItem : MonoBehaviour
     {
         return itemName;
     }
+
+    
+
+   
 }
