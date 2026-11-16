@@ -8,9 +8,12 @@ public class QuestManager : MonoBehaviour
 
     private SimpleInventory inventory;
 
+    private AchienementManager achievementManager;
+
     private void Awake()
     {
         inventory = FindFirstObjectByType<SimpleInventory>();
+        achievementManager = FindAnyObjectByType<AchienementManager>();
     }
 
     private void StartQuest(Quest newQuest)
@@ -82,7 +85,18 @@ public class QuestManager : MonoBehaviour
 
     public void CompleteQuest()
     {
+        if (inventory.RemoveItem(currentQuest.targetItemName, currentQuest.targetAmount) == false)
+        {
+            Debug.Log("퀘스트 아이템이 부족합니다.");
+            return;
+        }
+
         currentQuest.state = QuestState.Completed;
+
+        if (achievementManager != null)
+        {
+            achievementManager.QuestCompleted();
+        }
 
         Debug.Log(currentQuest.questName + "퀘스트 완료!");
         UpdateQuestText();

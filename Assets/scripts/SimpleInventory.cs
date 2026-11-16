@@ -28,8 +28,11 @@ public class SimpleInventory : MonoBehaviour
 
     [SerializeField]private int selectedIndex = -1;
 
+    private AchienementManager achievementManager;
+
     private void Awake()
     {
+        achievementManager = FindAnyObjectByType<AchienementManager>();
         playerController = GetComponent<PlayerController>();
         playerPickup = GetComponent<PlayerPickup>();
 
@@ -159,7 +162,7 @@ public class SimpleInventory : MonoBehaviour
 
     private bool CanUseItem(string itemName)                 //사용가능한 아이템
     {
-        return itemName == "물약" || itemName == "회복약" || itemName == "구급키트";
+        return itemName == "물약" || itemName == "회복약" || itemName == "구급키트" || itemName == "호1두";
     }
 
     public bool RemoveItem(string itemName, int amount)
@@ -196,8 +199,17 @@ public class SimpleInventory : MonoBehaviour
         }
 
         playerHealth.Heal(healAmount);
+
+
+        if (achievementManager != null)
+        {
+            achievementManager.ItemUsed(item.itemName);
+        }
+
         RemoveItem(item.itemName, 1);
     }
+
+    
 
     public void DropSelectedItem()
     {
@@ -205,7 +217,13 @@ public class SimpleInventory : MonoBehaviour
 
         string itemName = items[selectedIndex].itemName;
 
-        RemoveItem(itemName, 1);
+        if (RemoveItem(itemName, 1))
+        {
+            if (achievementManager != null)
+            {
+                achievementManager.ItemDropped();
+            }
+        }
     }
 
     public int GetItemAmount(string itemName)                 //인벤토리 내의 수량 확인 함수
